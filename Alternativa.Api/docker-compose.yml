@@ -1,0 +1,40 @@
+# Инфраструктура для бэкенда «Альтернатива Онлайн».
+# Порт Postgres смещён на 5433, чтобы не конфликтовать с локальным 5432.
+services:
+  app:
+    build:
+      # Контекст — корень репозитория (уровень выше), там лежит Dockerfile.
+      context: ..
+      dockerfile: Dockerfile
+    container_name: alternativa-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      # Внутри compose-сети обращаемся к БД по имени сервиса и внутреннему порту 5432.
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=alternativa;Username=alternativa;Password=alternativa"
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: alternativa-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: alternativa
+      POSTGRES_PASSWORD: alternativa
+      POSTGRES_DB: alternativa
+    ports:
+      - "5433:5432"
+    volumes:
+      - alternativa-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alternativa -d alternativa"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  alternativa-pgdata:

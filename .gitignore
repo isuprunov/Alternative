@@ -1,0 +1,15 @@
+# .NET
+bin/
+obj/
+*.user
+
+# IDE
+.idea/
+.vs/
+
+# Node / фронт (внутри alternativa-online свой .gitignore тоже есть)
+node_modules/
+dist/
+
+# ОС
+.DS_Store

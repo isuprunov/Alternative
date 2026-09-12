@@ -1,0 +1,217 @@
+/* ---------- Каркас раскладки ---------- */
+
+.app {
+  min-height: 100vh;
+}
+
+/* Боковая панель навигации (десктоп) */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  z-index: 40;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  min-height: var(--header-h);
+}
+.sidebar__logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  flex: none;
+}
+.sidebar__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.sidebar__brand-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+.sidebar__brand-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.sidebar__nav {
+  flex: 1;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+
+.nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 14.5px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.nav-link:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.nav-link svg {
+  flex: none;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+.nav-link:hover svg {
+  color: var(--text-secondary);
+}
+.nav-link.active {
+  background: var(--accent-strong);
+  color: var(--text-on-accent);
+}
+.nav-link.active svg {
+  color: var(--text-on-accent);
+}
+/* Вертикальный акцентный индикатор активного раздела */
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent-strong);
+}
+
+.sidebar__footer {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* Основная область */
+.main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 28px 32px 56px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header p {
+  color: var(--text-secondary);
+  margin-top: 6px;
+  max-width: 70ch;
+}
+
+/* Верхняя панель (только мобайл) */
+.topbar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  height: var(--header-h);
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-bottom: 1px solid var(--border);
+  z-index: 30;
+}
+.topbar__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+.topbar__logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+}
+.icon-btn:hover {
+  background: var(--surface-hover);
+}
+
+/* Подложка мобильного меню */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 25, 32, 0.4);
+  z-index: 45;
+  opacity: 0;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+/* ---------- Адаптив ---------- */
+@media (max-width: 900px) {
+  .topbar {
+    display: flex;
+  }
+  .main {
+    margin-left: 0;
+  }
+  .content {
+    padding: 20px 16px 48px;
+  }
+
+  /* Сайдбар превращается в выезжающую панель */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: var(--shadow-lg);
+    width: min(300px, 84vw);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 901px) {
+  .drawer-backdrop {
+    display: none;
+  }
+  .sidebar__close {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar__close {
+    margin-left: auto;
+  }
+}
